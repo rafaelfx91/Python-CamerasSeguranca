@@ -1,0 +1,42 @@
+nano /home/orangepi/Desktop/python/start.sh
+----------
+#!/bin/bash
+
+# Navega para o diretório do projeto
+cd /home/orangepi/Desktop/python
+
+# Ativa o ambiente virtual
+source venv/bin/activate
+
+# Executa o aplicativo Flask
+exec python app.py
+
+
+chmod +x /home/orangepi/Desktop/python/start.sh
+--------
+
+sudo nano /etc/systemd/system/flask_camera.service
+
+
+[Unit]
+Description=Servidor de Streaming de Câmeras Flask
+After=network.target
+
+[Service]
+User=root  # <--- Mude para o seu usuário no Orange Pi (provavelmente 'orangepi')
+WorkingDirectory=/home/orangepi/Desktop/python
+ExecStart=/home/orangepi/Desktop/python/start.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+------
+
+sudo systemctl daemon-reload
+sudo systemctl enable flask_camera.service
+sudo systemctl start flask_camera.service
+sudo systemctl stop flask_camera.service
+
+journalctl -u flask_camera.service -f
+

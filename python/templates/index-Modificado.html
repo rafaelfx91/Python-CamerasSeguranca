@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAMERAS</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #1a1a1a; /* Fundo escuro */
+            color: #e0e0e0; /* Texto claro */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff; /* Título branco */
+            margin-bottom: 20px;
+        }
+        .temperature-container {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+        .temperature-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .temperature-normal { color: #4CAF50; }
+        .temperature-warning { color: #FF9800; }
+        .temperature-danger { color: #F44336; }
+        .cameras-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .camera-box {
+            border: 1px solid #444; /* Borda mais escura */
+            background-color: #2a2a2a; /* Fundo da caixa mais escuro */
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Sombra mais pronunciada */
+            flex: 1 1 45%;
+            min-width: 300px;
+            max-width: 580px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .camera-box h2 {
+            text-align: center;
+            margin: 5px 0;
+            color: #ffffff; /* Título da câmera branco */
+            font-size: 1.2em;
+        }
+        .camera-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #333; /* Fundo escuro para a imagem */
+            border: 1px solid #555; /* Borda sutil para a imagem */
+        }
+
+        /* Media Queries para responsividade */
+        @media (max-width: 768px) {
+            .cameras-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .camera-box {
+                width: 90%;
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .camera-box h2 {
+                font-size: 1em;
+            }
+            .temperature-value {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>SISTEMA DE CÂMERAS</h1>
+    <!-- Container da Temperatura -->
+    <div class="temperature-container">
+        <div>Temperatura do Orange Pi:</div>
+        <div id="temperature-value" class="temperature-value">Carregando...</div>
+        <small>Atualizado a cada 5 segundos</small>
+    </div>
+    
+    <div class="cameras-container">
+        <div class="camera-box">
+            <h2>Camera1</h2>
+            <!-- A tag img aponta para a rota de streaming da câmera 1 -->
+            <img src="{{ url_for('video_feed', camera_id='1') }}" alt="Câmera 1">
+        </div>
+        <div class="camera-box">
+            <h2>Camera2</h2>
+            <!-- A tag img aponta para a rota de streaming da câmera 2 -->
+            <img src="{{ url_for('video_feed', camera_id='2') }}" alt="Câmera 2">
+        </div>
+    </div>
+
+    <script>
+        function updateTemperature() {
+            fetch('/temperature')
+                .then(response => response.json())
+                .then(data => {
+                    const tempElement = document.getElementById('temperature-value');
+                    if (data.status === 'success') {
+                        const temp = data.temperature;
+                        tempElement.textContent = `${temp.toFixed(1)}°C`;
+                        
+                        // Altera a cor baseado na temperatura
+                        if (temp > 70) {
+                            tempElement.className = 'temperature-value temperature-danger';
+                        } else if (temp > 60) {
+                            tempElement.className = 'temperature-value temperature-warning';
+                        } else {
+                            tempElement.className = 'temperature-value temperature-normal';
+                        }
+                    } else {
+                        tempElement.textContent = 'Erro';
+                        tempElement.className = 'temperature-value temperature-danger';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar temperatura:', error);
+                    document.getElementById('temperature-value').textContent = 'Erro';
+                });
+        }
+
+        // Atualiza a temperatura imediatamente ao carregar a página
+        updateTemperature();
+        
+        // Atualiza a temperatura a cada 5 segundos
+        setInterval(updateTemperature, 5000);
+    </script>
+</body>
+</html>

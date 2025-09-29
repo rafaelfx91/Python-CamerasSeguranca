@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAMERAS</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #1a1a1a; /* Fundo escuro */
+            color: #e0e0e0; /* Texto claro */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff; /* Título branco */
+            margin-bottom: 20px;
+        }
+        .cameras-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .camera-box {
+            border: 1px solid #444; /* Borda mais escura */
+            background-color: #2a2a2a; /* Fundo da caixa mais escuro */
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Sombra mais pronunciada */
+            flex: 1 1 45%;
+            min-width: 300px;
+            max-width: 580px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .camera-box h2 {
+            text-align: center;
+            margin: 5px 0;
+            color: #ffffff; /* Título da câmera branco */
+            font-size: 1.2em;
+        }
+        .camera-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background-color: #333; /* Fundo escuro para a imagem */
+            border: 1px solid #555; /* Borda sutil para a imagem */
+        }
+
+        /* Media Queries para responsividade */
+        @media (max-width: 768px) {
+            .cameras-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .camera-box {
+                width: 90%;
+                max-width: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .camera-box h2 {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>    
+    <div class="cameras-container">
+        <div class="camera-box">
+            <h2>Camera 1</h2>
+            <!-- A tag img aponta para a rota de streaming da câmera 1 -->
+            <img src="{{ url_for("video_feed", camera_id="1") }}" alt="Câmera 1">
+        </div>
+        <div class="camera-box">
+            <h2>Camera 2</h2>
+            <!-- A tag img aponta para a rota de streaming da câmera 2 -->
+            <img src="{{ url_for("video_feed", camera_id="2") }}" alt="Câmera 2">
+        </div>
+    </div>
+</body>
+</html>
+a
