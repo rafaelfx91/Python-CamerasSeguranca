@@ -1,16 +1,19 @@
-# Sistema de Monitoramento com Câmeras RTSP e Temperatura
+# Sistema de Monitoramento com Câmeras RTSP e Métricas do Sistema
 
-Sistema Flask para streaming de múltiplas câmeras RTSP com monitoramento de temperatura em tempo real do Orange Pi.
+Sistema Flask para streaming de múltiplas câmeras RTSP com monitoramento completo do Orange Pi em tempo real.
+
 
 ## DESCRIÇÃO
 - Transmite vídeo de duas câmeras RTSP simultaneamente
-- Monitora e exibe a temperatura da CPU do Orange Pi em tempo real
+- Monitora temperatura, uso de CPU e memória RAM do Orange Pi em tempo real
 - Interface web responsiva com design dark mode
 - Sistema de reconexão automática para câmeras offline
+- Indicadores visuais coloridos para cada métrica do sistema
 
-## TECNOLOGIAS
+# TECNOLOGIAS
 - Python 3 + Flask 3.0.3
 - OpenCV para captura de vídeo
+- psutil para métricas do sistema
 - HTML5 + CSS3 + JavaScript para interface
 - Systemd para inicialização automática
 
@@ -24,6 +27,8 @@ project/
 └── README.md
 
 ## CONFIGURAÇÃO
+
+
 
 1. INSTALAÇÃO DAS DEPENDÊNCIAS
 # Criar ambiente virtual
