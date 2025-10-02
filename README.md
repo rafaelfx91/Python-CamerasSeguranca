@@ -2,6 +2,35 @@
 
 Sistema Flask para streaming de múltiplas câmeras RTSP com monitoramento completo do Orange Pi em tempo real.
 
+Linguagem & Framework: 
+[![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.0.3-green?logo=flask)](https://flask.palletsprojects.com/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.9.0-orange?logo=opencv)](https://opencv.org/)
+
+Plataforma & Hardware: 
+[![Orange Pi](https://img.shields.io/badge/Orange_Pi-Compatible-red?logo=linux)](https://www.orange-pi.com/)
+[![Raspberry Pi](https://img.shields.io/badge/Raspberry_Pi-Compatible-red?logo=raspberrypi)](https://www.raspberrypi.com/)
+[![Linux](https://img.shields.io/badge/Linux-Ubuntu%20%7C%20Debian-yellow?logo=linux)](https://ubuntu.com/)
+
+Funcionalidades: 
+[![RTSP Streaming](https://img.shields.io/badge/RTSP-Streaming-ff69b4)](https://)
+[![Multi Camera](https://img.shields.io/badge/Multi-Camera-success)](https://)
+[![Real Time](https://img.shields.io/badge/Real--Time-Monitoring-green)](https://)
+[![System Metrics](https://img.shields.io/badge/System-Metrics-blueviolet)](https://)
+
+Monitoramento: 
+[![Temperature](https://img.shields.io/badge/CPU-Temperature-critical)](https://)
+[![CPU Usage](https://img.shields.io/badge/CPU-Usage-informational)](https://)
+[![RAM Usage](https://img.shields.io/badge/RAM-Usage-informational)](https://)
+
+Interface & UX: 
+[![Responsive](https://img.shields.io/badge/Web-Responsive-9cf)](https://)
+[![Dark Mode](https://img.shields.io/badge/Dark-Mode-555?logo=react)](https://)
+[![Auto Refresh](https://img.shields.io/badge/Auto--Refresh-5s-brightgreen)](https://)
+
+Status & Deployment: 
+[![Systemd Service](https://img.shields.io/badge/Systemd-Service-important)](https://)
+[![Auto Start](https://img.shields.io/badge/Auto--Start-Enabled-success)](https://)
 
 ## DESCRIÇÃO
 - Transmite vídeo de duas câmeras RTSP simultaneamente
