@@ -97,94 +97,66 @@
                 font-size: 1em;
             }
             .temperature-value {
-                font-size: 15px;
+                font-size: 1.5em;
             }
         }
-		/* Garante que os spans herdem as cores corretamente */
-.temperature-value span {
-    font-weight: bold;
-	 font-size: 18px;
-}
-
-.temperature-value .temperature-normal { color: #4CAF50; }
-.temperature-value .temperature-warning { color: #FF9800; }
-.temperature-value .temperature-danger { color: #F44336; }
     </style>
 </head>
 <body>
       <!-- Container da Temperatura -->
     <div class="temperature-container">
-        <div>Status do servidor:</div>
+        <div>Temperatura do Orange Pi:</div>
         <div id="temperature-value" class="temperature-value">Carregando...</div>
         <small>Atualizado a cada 5 segundos</small>
     </div>
     
     <div class="cameras-container">
         <div class="camera-box">
-            <h2>Laje</h2>
+            <h2>Camera2</h2>
             <!-- A tag img aponta para a rota de streaming da câmera 1 -->
             <img src="{{ url_for('video_feed', camera_id='1') }}" alt="Câmera 1">
         </div>
         <div class="camera-box">
-            <h2>Rua</h2>
+            <h2>Camera1</h2>
             <!-- A tag img aponta para a rota de streaming da câmera 2 -->
             <img src="{{ url_for('video_feed', camera_id='2') }}" alt="Câmera 2">
         </div>
     </div>
 
-	<script>
-    function updateSystemInfo() {
-        fetch('/temperature')
-            .then(response => response.json())
-            .then(data => {
-                const tempElement = document.getElementById('temperature-value');
-                
-                if (data.status === 'success') {
-                    const temp = data.temperature;
-                    const cpu = data.cpu_usage;
-                    const ram = data.ram_usage;
-                    
-                    // Função para determinar a cor baseada nos critérios
-                    function getColor(value, type) {
-                        if (type === 'temp') {
-                            if (value >= 70) return 'temperature-danger';
-                            if (value >= 60) return 'temperature-warning';
-                            return 'temperature-normal';
-                        } else { // cpu ou ram
-                            if (value >= 80) return 'temperature-danger';
-                            if (value >= 50) return 'temperature-warning';
-                            return 'temperature-normal';
+    <script>
+        function updateTemperature() {
+            fetch('/temperature')
+                .then(response => response.json())
+                .then(data => {
+                    const tempElement = document.getElementById('temperature-value');
+                    if (data.status === 'success') {
+                        const temp = data.temperature;
+                        tempElement.textContent = `${temp.toFixed(1)}°C`;
+                        
+                        // Altera a cor baseado na temperatura
+                        if (temp > 70) {
+                            tempElement.className = 'temperature-value temperature-danger';
+                        } else if (temp > 60) {
+                            tempElement.className = 'temperature-value temperature-warning';
+                        } else {
+                            tempElement.className = 'temperature-value temperature-normal';
                         }
+                    } else {
+                        tempElement.textContent = 'Erro';
+                        tempElement.className = 'temperature-value temperature-danger';
                     }
-                    
-                    // Aplica cores individuais
-                    const tempColor = getColor(temp, 'temp');
-                    const cpuColor = getColor(cpu, 'cpu');
-                    const ramColor = getColor(ram.percent, 'ram');
-                    
-                    // Atualiza o HTML com spans coloridos
-                    tempElement.innerHTML = `
-                        <span class="${tempColor}">TEMP: ${temp.toFixed(1)}°C </span> <br> 
-                        <span class="${cpuColor}">CPU: ${cpu.toFixed(1)}%</span> <br> 
-                        <span class="${ramColor}">RAM: ${ram.percent.toFixed(1)}%</span>
-                    `;
-                    
-                } else {
-                    tempElement.textContent = 'Erro na leitura';
-                    tempElement.className = 'temperature-value temperature-danger';
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao buscar informações do sistema:', error);
-                document.getElementById('temperature-value').textContent = 'Erro de conexão';
-            });
-		}
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar temperatura:', error);
+                    document.getElementById('temperature-value').textContent = 'Erro';
+                });
+        }
 
-		// Atualiza as informações imediatamente ao carregar a página
-		updateSystemInfo();
-		
-		// Atualiza as informações a cada 5 segundos
-		setInterval(updateSystemInfo, 5000);
-	</script>
+        // Atualiza a temperatura imediatamente ao carregar a página
+        updateTemperature();
+        
+        // Atualiza a temperatura a cada 5 segundos
+        setInterval(updateTemperature, 5000);
+    </script>
 </body>
 </html>

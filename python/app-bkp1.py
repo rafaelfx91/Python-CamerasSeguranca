@@ -1,21 +1,14 @@
 import cv2
 import time
-import psutil
 from flask import Flask, Response, render_template, jsonify
 
 # --- Links RTSP das suas câmeras (JÁ CONFIGURADOS) ---
-CAM1_RTSP = "rtsp://192.168.0.3/user=tkum&password=3w23er&channel=0&stream=1.sdp"
-CAM2_RTSP = "rtsp://192.168.0.12/user=unnn&password=f3V%fQnx2s9qKNV&channel=0&stream=1.sdp"
+CAM1_RTSP = "rtsp://192.168.0.1/user=admin&password=admin&channel=0&stream=1.sdp"
+CAM2_RTSP = "rtsp://192.168.0.2/user=admin&password=admin&channel=0&stream=1.sdp"
 # -----------------------------------------------------
 
 app = Flask(__name__)
 
-
-#-------------------------------
-#-------------------------------
-#------------METODOS------------
-#-------------------------------
-#-------------------------------
 def get_cpu_temperature():
     """
     Lê a temperatura da CPU do Orange Pi.
@@ -80,29 +73,6 @@ def generate_frames(camera_url):
         print(f"Stream da câmera {camera_url} fechado. Tentando reconectar em 5 segundos...")
         time.sleep(5) # Espera 5 segundos antes de tentar reconectar
 
-def get_cpu_usage():
-    """
-    Obtém o uso percentual da CPU.
-    """
-    return psutil.cpu_percent(interval=1)
-
-def get_ram_usage():
-    """
-    Obtém informações de uso da memória RAM.
-    """
-    memory = psutil.virtual_memory()
-    return {
-        "total": round(memory.total / (1024 ** 3), 2),  # GB
-        "used": round(memory.used / (1024 ** 3), 2),    # GB
-        "percent": memory.percent
-    }
-
-#-------------------------------
-#-------------------------------
-#--------------ROTAS------------
-#-------------------------------
-#-------------------------------
-
 @app.route("/")
 def index():
     """Rota principal que renderiza a página HTML."""
@@ -128,14 +98,10 @@ def temperature():
     Retorna JSON com a temperatura atual.
     """
     temp = get_cpu_temperature()
-    cpu_usage = get_cpu_usage()
-    ram_usage = get_ram_usage()
     
     if temp is not None:
         return jsonify({
             "temperature": temp,
-            "cpu_usage": cpu_usage,
-            "ram_usage": ram_usage,
             "unit": "celsius",
             "status": "success",
             "timestamp": time.time()
@@ -143,8 +109,6 @@ def temperature():
     else:
         return jsonify({
             "temperature": None,
-            "cpu_usage": cpu_usage,
-            "ram_usage": ram_usage,
             "unit": "celsius",
             "status": "error",
             "message": "Não foi possível ler a temperatura",
@@ -154,27 +118,16 @@ def temperature():
 @app.route("/temperature_page")
 def temperature_page():
     """
-    Rota que retorna uma página HTML simples para exibir temperatura, CPU e RAM.
+    Rota que retorna uma página HTML simples para exibir a temperatura.
     """
     temp = get_cpu_temperature()
-    cpu_usage = get_cpu_usage()
-    ram_usage = get_ram_usage()
     
     if temp is not None:
-        # Determina cores baseadas nos critérios
-        temp_color = "red" if temp >= 70 else "orange" if temp >= 60 else "green"
-        cpu_color = "red" if cpu_usage >= 80 else "orange" if cpu_usage >= 50 else "green"
-        ram_color = "red" if ram_usage['percent'] >= 80 else "orange" if ram_usage['percent'] >= 50 else "green"
-        
-        status = f"""
-        <div style="font-size: 1.2em; margin: 10px 0;">
-            <span style="color: {temp_color}">Temperatura: {temp:.1f}°C</span><br>
-            <span style="color: {cpu_color}">CPU: {cpu_usage:.1f}%</span><br>
-            <span style="color: {ram_color}">RAM: {ram_usage['percent']:.1f}%</span>
-        </div>
-        """
+        status = f"Temperatura atual: {temp:.1f}°C"
+        color = "red" if temp > 70 else "orange" if temp > 60 else "green"
     else:
         status = "Erro ao ler temperatura"
+        color = "gray"
     
     html_content = f"""
     <!DOCTYPE html>
@@ -189,6 +142,12 @@ def temperature_page():
                 padding: 50px;
                 background-color: #f0f0f0;
             }}
+            .temperature {{
+                font-size: 2.5em;
+                color: {color};
+                font-weight: bold;
+                margin: 20px 0;
+            }}
             .container {{
                 background: white;
                 padding: 30px;
@@ -196,17 +155,12 @@ def temperature_page():
                 box-shadow: 0 0 10px rgba(0,0,0,0.1);
                 display: inline-block;
             }}
-            .metric {{
-                font-size: 15px;
-                font-weight: bold;
-                margin: 10px 0;
-            }}
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Status do Orange Pi</h1>
-            <div class="metrics">{status}</div>
+            <h1>Temperatura do Orange Pi</h1>
+            <div class="temperature">{status}</div>
             <p>Atualizado a cada 5 segundos</p>
             <p><a href="/">Voltar para câmeras</a></p>
         </div>
