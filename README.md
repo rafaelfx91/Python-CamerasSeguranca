@@ -18,56 +18,56 @@ Sistema Flask para streaming de múltiplas câmeras RTSP com monitoramento compl
 - Systemd para inicialização automática
 
 ## ESTRUTURA DO PROJETO
-project/
-├── app.py                 # Aplicação Flask principal
-├── requirements.txt       # Dependências do Python
-├── start.sh              # Script de inicialização
-├── templates/
-│   └── index.html        # Interface web
-└── README.md
+project/<br>
+├── app.py                 # Aplicação Flask principal<br>
+├── requirements.txt       # Dependências do Python<br>
+├── start.sh              # Script de inicialização<br>
+├── templates/<br>
+│   └── index.html        # Interface web<br>
+└── README.md<br>
 
 ## CONFIGURAÇÃO
 
 
+## 1. INSTALAÇÃO DAS DEPENDÊNCIAS
+    # Criar ambiente virtual
+    python -m venv venv
+    source venv/bin/activate
+    
+    # Instalar dependências
+    pip install -r requirements.txt   
 
-1. INSTALAÇÃO DAS DEPENDÊNCIAS
-# Criar ambiente virtual
-python -m venv venv
-source venv/bin/activate
+## 2. CONFIGURAR URLs DAS CÂMERAS
+    Edite o arquivo app.py e atualize as variáveis:
+    CAM1_RTSP = "rtsp://seu_ip_camera1/stream"
+    CAM2_RTSP = "rtsp://seu_ip_camera2/stream"
 
-# Instalar dependências
-pip install -r requirements.txt
+## 3. CONFIGURAR INICIALIZAÇÃO AUTOMÁTICA
+      # Tornar o script executável
+      chmod +x start.sh
+      
+      # Criar serviço systemd
+      sudo nano /etc/systemd/system/flask_camera.service
 
-2. CONFIGURAR URLs DAS CÂMERAS
-Edite o arquivo app.py e atualize as variáveis:
-CAM1_RTSP = "rtsp://seu_ip_camera1/stream"
-CAM2_RTSP = "rtsp://seu_ip_camera2/stream"
 
-3. CONFIGURAR INICIALIZAÇÃO AUTOMÁTICA
-# Tornar o script executável
-chmod +x start.sh
+## Cole este conteúdo:
+      [Unit]
+      Description=Servidor de Streaming de Câmeras Flask
+      After=network.target
+      
+      [Service]
+      User=orangepi
+      WorkingDirectory=/home/orangepi/Desktop/python
+      ExecStart=/home/orangepi/Desktop/python/start.sh
+      Restart=always
+      
+      [Install]
+      WantedBy=multi-user.target
 
-# Criar serviço systemd
-sudo nano /etc/systemd/system/flask_camera.service
-
-Cole este conteúdo:
-[Unit]
-Description=Servidor de Streaming de Câmeras Flask
-After=network.target
-
-[Service]
-User=orangepi
-WorkingDirectory=/home/orangepi/Desktop/python
-ExecStart=/home/orangepi/Desktop/python/start.sh
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-
-Ativar o serviço:
-sudo systemctl daemon-reload
-sudo systemctl enable flask_camera.service
-sudo systemctl start flask_camera.service
+## Ativar o serviço:
+    sudo systemctl daemon-reload
+    sudo systemctl enable flask_camera.service
+    sudo systemctl start flask_camera.service
 
 ## USO
 
