@@ -71,29 +71,44 @@ project/<br>
 
 ## USO
 
-EXECUÇÃO MANUAL
-python app.py
+## EXECUÇÃO MANUAL
+    python app.py
+
 O servidor estará disponível em: http://seu_ip:5000
 
-COMANDOS DO SERVIÇO
-# Iniciar serviço
-sudo systemctl start flask_camera.service
+## COMANDOS DO SERVIÇO
+    # Iniciar serviço
+    sudo systemctl start flask_camera.service
+    
+    # Parar serviço
+    sudo systemctl stop flask_camera.service
+    
+    # Ver status
+    sudo systemctl status flask_camera.service
+    
+    # Ver logs
+    journalctl -u flask_camera.service -f
 
-# Parar serviço
-sudo systemctl stop flask_camera.service
-
-# Ver status
-sudo systemctl status flask_camera.service
-
-# Ver logs
-journalctl -u flask_camera.service -f
 
 ## MONITORAMENTO DE TEMPERATURA
-Indicadores visuais:
-- NORMAL (Verde): ≤ 60°C
-- ALERTA (Laranja): 61°C - 70°C
-- CRÍTICO (Vermelho): > 70°C
-Atualização a cada 5 segundos
+INDICADORES VISUAIS - CORES E LIMITES
+
+🌡️ TEMPERATURA DA CPU
+-    NORMAL (Verde): < 60°C
+-    ALERTA (Laranja): 60°C - 70°C
+-    CRÍTICO (Vermelho): > 70°C
+
+⚙️ USO DA CPU
+-    NORMAL (Verde): < 50%
+-    ALERTA (Laranja): 50% - 80%
+-    CRÍTICO (Vermelho): > 80%
+
+💾 USO DA MEMÓRIA RAM
+-    NORMAL (Verde): < 50%
+-    ALERTA (Laranja): 50% - 80%
+-    CRÍTICO (Vermelho): > 80%
+
+Atualização automática a cada 5 segundos
 
 ## ROTAS DA API
 - GET / - Interface principal com câmeras e temperatura
@@ -127,3 +142,15 @@ SERVIÇO NÃO INICIA:
 ## NOTAS
 - Configure adequadamente as credenciais e URLs das câmeras
 - Projeto para uso educacional e pessoal
+
+## DEPENDÊNCIAS PRINCIPAIS
+    Flask==3.0.3
+    opencv-python==4.9.0.80
+    psutil==5.9.6
+
+## SEGURANÇA
+-    Não exponha o serviço diretamente na internet sem proteção adequada
+-    Utilize HTTPS em produção
+-    Mantenha credenciais das câmeras em variáveis de ambiente
+-    Atualize regularmente as dependências
+
